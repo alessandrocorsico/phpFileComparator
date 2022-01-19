@@ -4,10 +4,6 @@ namespace App;
 
 class Comparator {
   
-  private string $fileNameA;
-  private string $fileNameB;
-  public string $message;
-
   protected $fileNameA;
   protected $fileNameB;
 
@@ -15,12 +11,8 @@ class Comparator {
     $this->fileNameA = $fileNameA;
     $this->fileNameB = $fileNameB;
   }
-  
-  public function compare() {
 
-  public function compare() {
-    $fileNameA = $this->fileNameA;
-    $fileNameB = $this->fileNameB;    
+  public function compare() {     
 
     clearstatcache();
 
@@ -32,7 +24,7 @@ class Comparator {
       return false;
     }
 
-    $chunksize = 4096;//3MB, compliance to memory limit 16M
+    $chunksize = 3145728;//3MB, compliance to memory limit 16M
     $fp_a = fopen($this->fileNameA, 'rb'); // "b" for system which differentiate between binary and text files
     $fp_b = fopen($this->fileNameB, 'rb'); // "b" for system which differentiate between binary and text files
         
@@ -44,14 +36,12 @@ class Comparator {
         {
             fclose($fp_a);
             fclose($fp_b);
-            $this->message = 'Il contenuto dei file differisce';
             return false;
         }
     }
  
     fclose($fp_a);
     fclose($fp_b);
-    $this->message = 'Il contenuto dei file è uguale';
     return true;
   }
 }
