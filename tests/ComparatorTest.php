@@ -4,10 +4,7 @@ use App\Comparator;
 
 class ComparatorTest extends TestCase {    
 
-    private $comparator;
-
-    private $fileNameA = './usesCase/file1.txt';
-    private $fileNameB = './usesCase/file2.txt';
+    private $comparator;    
 
     public function setUp() : void {
       
@@ -15,17 +12,34 @@ class ComparatorTest extends TestCase {
       
     }
 
-    public function testCompare() {
+    public function testCompareSameFile() {
 
-      $this->comparator->setFileToCompare($this->fileNameA, $this->fileNameB);
+      $fileNameA = './usesCase/pdf_test_1.pdf';
+      $fileNameB = './usesCase/the_same_pdf_test_1.pdf';
+      $message = 'Il contenuto dei file differisce';
+      
+      $this->assertTrue($this->comparator->compare($fileNameA, $fileNameB), $message);
 
-      $this->assertEquals(true, $this->comparator->compare(), $this->comparator->message);
+    }   
+    
+    public function testCompareDifferentFiles() {
+
+      $fileNameA = './usesCase/img1.jpg';
+      $fileNameB = './usesCase/img2.jpg';
+      $message = 'Il contenuto dei file NON differisce oppure ALMENO UNO dei file non esiste';
+      
+      $this->assertFalse($this->comparator->compare($fileNameA, $fileNameB), $message);
+
     }
 
-    public function testAssertFileEquals() {
+    public function testCompareInexistentFiles() {
 
-      $this->assertFileEquals($this->fileNameA, $this->fileNameB, 'Il contenuto dei file differisce');
-
+      $fileNameA = './usesCase/pdf_test_1.pdf';
+      $fileNameB = './usesCase/file3.txt';
+      $message = 'I file risultano entrambi esistenti';
+      
+      $this->assertNull($this->comparator->compare($fileNameA, $fileNameB), $message);
+      
     }
 
 }
