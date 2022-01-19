@@ -8,10 +8,15 @@ class Comparator {
   private string $fileNameB;
   public string $message;
 
-  public function setFileToCompare($fileNameA, $fileNameB) {
+  protected $fileNameA;
+  protected $fileNameB;
+
+  public function __construct($fileNameA, $fileNameB) {
     $this->fileNameA = $fileNameA;
     $this->fileNameB = $fileNameB;
   }
+  
+  public function compare() {
 
   public function compare() {
     $fileNameA = $this->fileNameA;
@@ -19,20 +24,17 @@ class Comparator {
 
     clearstatcache();
 
-    if (!file_exists($fileNameA) || !file_exists($fileNameB)) {
-      $this->message = 'Uno dei file risulta inesistente';
-      return false;
+    if (!file_exists($this->fileNameA) || !file_exists($this->fileNameB)) {
+      return null;
     }        
 
-    if (filesize($fileNameA) != filesize($fileNameB)) {
-      $this->message = 'I file differiscono per dimensione'  ;
+    if (filesize($this->fileNameA) != filesize($this->fileNameB)) {
       return false;
     }
 
-
-    $chunksize = 8388608; //8mb
-    $fp_a = fopen($fileNameA, 'rb'); // "b" for system which differentiate between binary and text files
-    $fp_b = fopen($fileNameB, 'rb'); // "b" for system which differentiate between binary and text files
+    $chunksize = 4096;//3MB, compliance to memory limit 16M
+    $fp_a = fopen($this->fileNameA, 'rb'); // "b" for system which differentiate between binary and text files
+    $fp_b = fopen($this->fileNameB, 'rb'); // "b" for system which differentiate between binary and text files
         
     while (!feof($fp_a) && !feof($fp_b))
     {
