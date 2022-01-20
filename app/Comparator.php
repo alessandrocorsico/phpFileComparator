@@ -4,35 +4,29 @@ namespace App;
 
 class Comparator {
   
-  private string $fileNameA;
-  private string $fileNameB;
-  public string $message;
+  protected $fileNameA;
+  protected $fileNameB;
 
-  public function setFileToCompare($fileNameA, $fileNameB) {
+  public function __construct($fileNameA, $fileNameB) {
     $this->fileNameA = $fileNameA;
     $this->fileNameB = $fileNameB;
   }
 
-  public function compare() {
-    $fileNameA = $this->fileNameA;
-    $fileNameB = $this->fileNameB;    
+  public function compare() : ? bool{     
 
     clearstatcache();
 
-    if (!file_exists($fileNameA) || !file_exists($fileNameB)) {
-      $this->message = 'Uno dei file risulta inesistente';
-      return false;
+    if (!file_exists($this->fileNameA) || !file_exists($this->fileNameB)) {
+      return null;
     }        
 
-    if (filesize($fileNameA) != filesize($fileNameB)) {
-      $this->message = 'I file differiscono per dimensione'  ;
+    if (filesize($this->fileNameA) != filesize($this->fileNameB)) {
       return false;
     }
 
-
-    $chunksize = 8388608; //8mb
-    $fp_a = fopen($fileNameA, 'rb'); // "b" for system which differentiate between binary and text files
-    $fp_b = fopen($fileNameB, 'rb'); // "b" for system which differentiate between binary and text files
+    $chunksize = 3145728;//3MB, compliance to memory limit 16M
+    $fp_a = fopen($this->fileNameA, 'rb'); // "b" for system which differentiate between binary and text files
+    $fp_b = fopen($this->fileNameB, 'rb'); // "b" for system which differentiate between binary and text files
         
     while (!feof($fp_a) && !feof($fp_b))
     {
@@ -42,14 +36,12 @@ class Comparator {
         {
             fclose($fp_a);
             fclose($fp_b);
-            $this->message = 'Il contenuto dei file differisce';
             return false;
         }
     }
  
     fclose($fp_a);
     fclose($fp_b);
-    $this->message = 'Il contenuto dei file è uguale';
     return true;
   }
 }
