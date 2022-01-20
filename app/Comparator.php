@@ -12,7 +12,7 @@ class Comparator {
     $this->fileNameB = $fileNameB;
   }
 
-  public function compare() {     
+  public function compare() : ? bool{     
 
     clearstatcache();
 
